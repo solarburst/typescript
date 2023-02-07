@@ -1,4 +1,5 @@
 import { renderBlock } from './lib.js';
+import { User, Place } from './interfaces.js'
 
 export function renderUserBlock() {
   const user = getUserData();
@@ -19,17 +20,12 @@ export function renderUserBlock() {
   );
 }
 
-interface User {
-  username?: unknown,
-  avatarUrl?: unknown,
-}
-
-
 function getUserData(): User {
-
   const localStorageUser: User = JSON.parse(localStorage.getItem('user'));
-  let user = {};
-  if(localStorageUser)
+
+  let user;
+  
+  if (localStorageUser)
     user = {
       username: localStorageUser.username,
       avatarUrl: localStorageUser.avatarUrl ? localStorageUser.avatarUrl : '/img/avatar.png',
@@ -45,12 +41,33 @@ function getUserData(): User {
 }
 
 export function getFavoritesAmount () {
+  const favorites = getFavorites()
 
-  type TypeFavAmount = {
-    amount: unknown,
-  }
+  return favorites.length
+}
 
-  const favoritesAmount: TypeFavAmount = JSON.parse(localStorage.getItem('favoritesAmount'));
-  const favoritesCount = +favoritesAmount || 0;
-  return favoritesCount;
+function getFavorites(): Pick<Place, 'id' | 'image' | 'name'>[] { 
+  const favoriteItems: unknown = JSON.parse(localStorage.getItem('favoriteItems'))
+
+  if (!Array.isArray(favoriteItems) || favoriteItems.length === 0) {
+    return []
+  } 
+
+  return favoriteItems
+}
+
+export function toggleFavorites(favPlace: Pick<Place, 'id' | 'image' | 'name'>): void { 
+  const favorites = getFavorites()
+
+  const filteredFavorites = favorites.filter((fav: Pick<Place, 'id' | 'image' | 'name'>) => fav.id !== favPlace.id)
+
+  filteredFavorites.length === favorites.length ? 
+    localStorage.setItem('favoriteItems', JSON.stringify([...favorites, favPlace])) : 
+    localStorage.setItem('favoriteItems', JSON.stringify(filteredFavorites))
+}
+
+export function isFavorite(placeId: number): boolean { 
+  const favorites = getFavorites()
+
+  return favorites.find((fav: Pick<Place, 'id' | 'image' | 'name'>) => fav.id === placeId) ? true : false
 }

@@ -1,3 +1,6 @@
+import { Place, RequestParams } from './interfaces.js'
+import { HOMY_API_URL } from './constants.js'
+
 export function renderBlock (elementId, html) {
   const element = document.getElementById(elementId)
   element.innerHTML = html
@@ -29,4 +32,23 @@ export function renderToast (message, action) {
       renderToast(null, null)
     }
   }
+}
+
+export async function fetchHomeApi(requestParams: RequestParams): Promise<Place[] |  Record<string, string>> {
+  if (requestParams.method === 'GET') {
+    const fetchURL = HOMY_API_URL + requestParams.endPoint + serializeToGetParams(requestParams.parameters)
+    const response = await fetch(fetchURL)
+    return await response.json()
+  } else { 
+    const fetchURL = HOMY_API_URL + requestParams.endPoint
+    const response = await fetch(fetchURL, {
+      method: requestParams.method,
+      body: JSON.stringify(requestParams.parameters)
+    })
+    return await response.json()
+  }
+}
+
+export function serializeToGetParams(params: Record<string, string | number>): string { 
+  return '?' + Object.keys(params).map(key => `${key}=${params[key]}`).join('&')
 }
