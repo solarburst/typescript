@@ -66,7 +66,7 @@ export function toggleFavorites(favPlace: Pick<Place, 'id' | 'image' | 'name'>):
     localStorage.setItem('favoriteItems', JSON.stringify(filteredFavorites))
 }
 
-export function isFavorite(placeId: number): boolean { 
+export function isFavorite(placeId: string): boolean { 
   const favorites = getFavorites()
 
   return favorites.find((fav: Pick<Place, 'id' | 'image' | 'name'>) => fav.id === placeId) ? true : false

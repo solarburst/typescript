@@ -61,7 +61,7 @@ export function renderSearchResultsBlock(places: Place[] | Record<string, string
                       <p class="result-info--name">${place.name}</p>
                       <p class="price">${place.price}&#8381;</p>
                     </div>
-                    <div class="result-info--map"><i class="map-icon"></i> ${place.remoteness}км от вас</div>
+                    ${place.remoteness ? `<div class="result-info--map"><i class="map-icon"></i> ${place.remoteness}км от вас </div>` : ''}
                     <div class="result-info--descr">${place.description}</div>
                     <div class="result-info--footer">
                       <div>
@@ -92,7 +92,7 @@ function toggleFavoriteItem(e: Event): void {
       name: null
     }
 
-    place.id = parseInt(e.target.id)
+    place.id = e.target.id
 
     if (e.target.nextElementSibling instanceof HTMLImageElement) {
       place.image = e.target.nextElementSibling.src

@@ -1,46 +1,39 @@
-export interface User { 
-    username: string,
-    avatarUrl: string
-}
-
 export interface Place { 
-    id: number,
-    image: string,
-    name: string,
-    description: string,
+    id: string,
+    image:	string,
+    name:	string,
+    description:	string,
     remoteness:	number,
     bookedDates: number[],
     price: number
-}
-
-export interface RequestParams {
+ }
+ 
+ export interface User { 
+    username: string,
+    avatarUrl: string
+ }
+ 
+ export interface RequestParams {
     method: 'GET' | 'PATCH',
     endPoint: string,
     parameters: GetPlaceParams | FindPlacesParams | BookPlaceParams
-}
+ }
  
-export interface GetPlaceParams extends Record<string, string | number> {
+ export interface GetPlaceParams {
     id: number,
     coordinates?: string,
-}
+ }
  
-export interface FindPlacesParams extends Record<string, string | number> {
-    coordinates: string,
+ export interface FindPlacesParams {
+    city?: string,
+    coordinates?: string,
     checkInDate: number,
     checkOutDate: number,
     maxPrice?: number
-}
+ }
  
-export interface BookPlaceParams extends Record<string, number> {
+ export interface BookPlaceParams {
     id: number,
     checkInDate: number,
     checkOutDate: number
-}
-
-export interface SearchFormData { 
-    'city': string,
-    'coordinates': [number, number],
-    'check-in-date': Date,
-    'check-out-date': Date,
-    'max-price': number,
-}
+ }

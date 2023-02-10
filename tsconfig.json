@@ -1,11 +1,15 @@
-{
+{ 
+    "type": "module",
     "compilerOptions": {
-        "outDir": "public/scripts",
-        "target": "ES2022",
-        "module": "ES2022",
-        "moduleResolution": "node"
-    },
-    "files": [
-        "src/index.ts"
-    ]
+            "outDir": "public/scripts", 
+            "target": "ES2022", 
+            "module": "ES2022", 
+            "moduleResolution": "node",
+            "allowJs": true,
+            "declaration": true,
+            "declarationDir": "public/scripts/types"
+    }, 
+    "include": [
+            "src/**/*"
+    ] 
 }

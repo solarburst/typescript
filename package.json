@@ -2,6 +2,8 @@
   "name": "typescript",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
+  "types": "./public/scripts/types/index.d.ts",
   "scripts": {
     "build": "rm -rf public/scripts && tsc",
     "develop": "rm -rf public/scripts && tsc -p tsconfig-dev.json",

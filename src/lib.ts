@@ -49,6 +49,6 @@ export async function fetchHomeApi(requestParams: RequestParams): Promise<Place[
   }
 }
 
-export function serializeToGetParams(params: Record<string, string | number>): string { 
+export function serializeToGetParams(params: object): string { 
   return '?' + Object.keys(params).map(key => `${key}=${params[key]}`).join('&')
 }
