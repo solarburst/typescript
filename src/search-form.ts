@@ -1,7 +1,7 @@
-import { fetchHomeApi, renderBlock } from './lib.js'
+import { renderBlock } from './lib.js'
 import { FindPlacesParams, Place } from './interfaces.js'
 import { renderSearchResultsBlock } from './search-results.js'
-import { FlatRentSdk, FindFlatParams } from './flat-rent-sdk.js'
+import { FindPlaces } from './classes.js'
 
 const TWO_DAYS = 2
 const ONE_MONTH = 1
@@ -87,52 +87,6 @@ function getSearchFormData(e: Event): void {
   search(searchFormData, renderSearchResultsBlock, homy, flatRent)
 }
 
-export function search(params: FindPlacesParams, render: (places: Place[] | Record<string, string> | Error) => void, homy: boolean, flatRent: boolean): void { 
-  let allPlaces: Place[] = [];
-
-  if (flatRent) { 
-    const flats = new FlatRentSdk();
-    const parameters: FindFlatParams = {
-      city: params.city,
-      checkInDate: new Date(params.checkInDate),
-      checkOutDate: new Date(params.checkOutDate),
-    }
-
-    params.maxPrice ? parameters.priceLimit = params.maxPrice : null
-
-    flats.search(parameters).then(result => { 
-
-      if (!Array.isArray(result)) {
-        render(result);
-      } else { 
-        const places: Place[] = result.map(flat => ({
-          id: flat.id,
-          image: flat.photos[0],
-          name:	flat.title,
-          description:	flat.details,
-          remoteness:	null,
-          bookedDates: flat.bookedDates.map(bookDate => bookDate.getTime()),
-          price: flat.totalPrice
-        }))
-        allPlaces = [...allPlaces, ...places]
-        render(allPlaces)
-      }
-    }).catch(err => render(err))
-  }
-
-  if (homy) { 
-    delete params.city
-    fetchHomeApi({
-      method: 'GET',
-      endPoint: '/places',
-      parameters: params
-    }).then((places) => {
-      if (Array.isArray(places)) {
-        allPlaces = [...allPlaces, ...places]
-        render(allPlaces)
-      } else { 
-        render(places)
-      }
-    });
-  }
+export async function search(params: FindPlacesParams, render: (places: Place[]) => void, homy: boolean, flatRent: boolean): Promise<void> { 
+  render(await FindPlaces.findPlaces(params, homy, flatRent))
 }
