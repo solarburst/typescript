@@ -21,7 +21,7 @@ export function renderUserBlock() {
 }
 
 function getUserData(): User {
-  const localStorageUser: User = JSON.parse(localStorage.getItem('user'));
+  const localStorageUser: User = JSON.parse(localStorage.getItem('user') || '');
 
   let user;
   
@@ -47,7 +47,7 @@ export function getFavoritesAmount () {
 }
 
 function getFavorites(): Pick<Place, 'id' | 'image' | 'name'>[] { 
-  const favoriteItems: unknown = JSON.parse(localStorage.getItem('favoriteItems'))
+  const favoriteItems: unknown = JSON.parse(localStorage.getItem('favoriteItems') || '')
 
   if (!Array.isArray(favoriteItems) || favoriteItems.length === 0) {
     return []

@@ -8,7 +8,8 @@ export interface Place {
     price: number
  }
  
- export interface User { 
+ export interface User {
+   [key: string]: string, 
     username: string,
     avatarUrl: string
  }
@@ -20,11 +21,13 @@ export interface Place {
  }
  
  export interface GetPlaceParams {
+   [key: string]: string | number | undefined,
     id: number,
     coordinates?: string,
  }
  
  export interface FindPlacesParams {
+   [key: string]: string | number | undefined,
     city?: string,
     coordinates?: string,
     checkInDate: number,
@@ -33,6 +36,7 @@ export interface Place {
  }
  
  export interface BookPlaceParams {
+   [key: string]: number,
     id: number,
     checkInDate: number,
     checkOutDate: number

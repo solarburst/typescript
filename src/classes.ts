@@ -7,7 +7,7 @@ export abstract class FindPlaces {
     if (requestParams.method === 'GET') {
       const fetchURL = HOMY_API_URL + requestParams.endPoint + this.serializeToGetParams(requestParams.parameters)
       const response = await fetch(fetchURL)
-      return await response.json()
+      return await response.json() 
     } else { 
       const fetchURL = HOMY_API_URL + requestParams.endPoint
       const response = await fetch(fetchURL, {
@@ -35,14 +35,14 @@ export abstract class FindPlaces {
     }
   }
 
-  private static serializeToGetParams(params: object): string { 
+  private static serializeToGetParams(params: {[key: string]: string | number | undefined}): string { 
     return '?' + Object.keys(params).map(key => `${key}=${params[key]}`).join('&')
   }
 
   private static async getFlatsSDK(params:FindPlacesParams): Promise<Place[]> {
     const flats = new FlatRentSdk();
     const parameters: FindFlatParams = {
-      city: params.city,
+      city: params?.city ? params.city : '',
       checkInDate: new Date(params.checkInDate),
       checkOutDate: new Date(params.checkOutDate),
     }
@@ -58,7 +58,7 @@ export abstract class FindPlaces {
       image: flat.photos[0],
       name:	flat.title,
       description:	flat.details,
-      remoteness:	null,
+      remoteness:	0,
       bookedDates: flat.bookedDates.map(bookDate => bookDate.getTime()),
       price: flat.totalPrice
     }))
@@ -87,6 +87,8 @@ export abstract class FindPlaces {
 
     if (orderType === 'DESC') { 
       return places.sort((a, b) => a[orderBy] <= b[orderBy] ? 1 : -1)
-    } 
+    }
+    
+    return places
   }
 }

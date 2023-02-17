@@ -15,7 +15,7 @@ export function renderSearchStubBlock () {
   )
 }
 
-export function renderEmptyOrErrorSearchBlock (reasonMessage) {
+export function renderEmptyOrErrorSearchBlock (reasonMessage: string) {
   renderBlock(
     'search-results-block',
     `
@@ -53,7 +53,7 @@ export function renderSearchResultsBlock(places: Place[]): void {
 
     renderResultList(places)
 
-    document.querySelector('#searchSort').addEventListener('change', (e) => sortResults(e.target, places))
+    document.querySelector('#searchSort')?.addEventListener('change', (e) => sortResults(e.target, places))
 }
 
 function renderResultList(places: Place[]): void { 
@@ -94,19 +94,15 @@ function renderResultList(places: Place[]): void {
 
 function toggleFavoriteItem(e: Event): void {
   if (e.target instanceof HTMLDivElement) {
+    const id = e.target.id
+    const image = e.target.nextElementSibling instanceof HTMLImageElement ? e.target.nextElementSibling.src : ''
+    const name = e.target.closest('.result')?.querySelector('.result-info--name')?.textContent
+
     const place: Pick<Place, 'id' | 'image' | 'name'> = {
-      id: null,
-      image: null,
-      name: null
+      id: id,
+      image: image,
+      name: name ? name : ''
     }
-
-    place.id = e.target.id
-
-    if (e.target.nextElementSibling instanceof HTMLImageElement) {
-      place.image = e.target.nextElementSibling.src
-    }
-
-    place.name = e.target.closest('.result').querySelector('.result-info--name').textContent
 
     toggleFavorites(place)
 
@@ -117,7 +113,7 @@ function toggleFavoriteItem(e: Event): void {
 }
 
 
-function sortResults(select: EventTarget, places: Place[]): void { 
+function sortResults(select: EventTarget | null, places: Place[]): void { 
   if (select instanceof HTMLSelectElement) {
     if (select.value !== '') {
       const [orderBy, orderType] = select.value.split('_')
